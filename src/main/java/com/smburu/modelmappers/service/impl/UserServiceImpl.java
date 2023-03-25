@@ -1,6 +1,7 @@
 package com.smburu.modelmappers.service.impl;
 
 import com.smburu.modelmappers.dto.UserDto;
+import com.smburu.modelmappers.exceptions.EmailAlreadyExistsException;
 import com.smburu.modelmappers.exceptions.ResourceNotFoundException;
 import com.smburu.modelmappers.mapper.AutoUserMapper;
 import com.smburu.modelmappers.model.User;
@@ -28,6 +29,12 @@ public class UserServiceImpl implements UserService {
         // User user = UserMapper.mapToUser(userDto);
 
         //User user = modelMapper.map(userDto, User.class);
+
+        Optional<User>optionalUser = userRepository.findByEmail(userDto.getEmail());
+
+        if (optionalUser.isPresent()){
+            throw new EmailAlreadyExistsException("Email Already Exits for user");
+        }
 
         User user = AutoUserMapper.MAPPER.mapToUser(userDto);
 
